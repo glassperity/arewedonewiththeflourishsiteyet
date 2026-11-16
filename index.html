@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NO</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 1.5rem;
+      user-select: none;
+    }
+    body.no {
+      background-color: #c62828;
+    }
+    body.yes {
+      background-color: #2e7d32;
+    }
+    main#answer {
+      font-size: min(38vmin, 42vw);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      text-align: center;
+    }
+    footer#updated {
+      position: fixed;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.85rem;
+      opacity: 0.85;
+      padding: 0 1rem;
+    }
+  </style>
+  <noscript><style>.js-only{display:none}</style></noscript>
+</head>
+<body class="no">
+  <main id="answer" aria-live="polite">NO</main>
+  <footer id="updated">updated 2026-11-16T16:40:58Z</footer>
+  <script>
+    (function () {
+      fetch('/status.json', { cache: 'no-store' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          if (typeof data.done !== 'boolean') return;
+          var word = data.done ? 'YES' : 'NO';
+          var cls = data.done ? 'yes' : 'no';
+          document.title = word;
+          document.body.className = cls;
+          document.getElementById('answer').textContent = word;
+          if (data.updated) {
+            document.getElementById('updated').textContent = 'updated ' + data.updated;
+          }
+        })
+        .catch(function () {});
+    })();
+  </script>
+</body>
+</html>
